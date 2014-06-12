@@ -13,34 +13,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <title>core-iconset-svg</title>
   <script src="../platform/platform.js"></script>
-  <link rel="import" href="core-iconset-svg.html">
   <link rel="import" href="svg-sample-icons.html">
-  <link rel="import" href="navigation-icons.html">
-  <link rel="import" href="social-icons.html">
   <style shim-shadowdom>
-    #icon1::shadow {
+    svg-icon-demo:nth-of-type(1) {
       fill: orange;
     }
 
-    #icon2::shadow {
+    svg-icon-demo:nth-of-type(2) {
       fill: green;
       stroke: orange;
     }
 
-    #icon3::shadow {
+    svg-icon-demo:nth-of-type(3) {
       fill: navy;
     }
 
-    #icon3:hover::shadow {
-      fill: orange;
-    }
-
-    svg-icon-demo::shadow {
+    svg-icon-demo {
       transition: all 0.5s;
       -webkit-transition: all 0.5s;
     }
 
-    svg-icon-demo:hover::shadow {
+    svg-icon-demo:hover {
       -webkit-filter: drop-shadow( 2px 2px 2px #333 );
       filter: drop-shadow( 2px 2px 2px #333 );
     }
@@ -73,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       Polymer('svg-icon-demo', {
         
-        size: 24,
+        size: 100,
         iconChanged: function() {
           if (!this.icon) {
             return;
@@ -100,12 +93,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <svg-icon-demo icon="{{}}"></svg-icon-demo>
     </template>
   </div>
-  <svg-icon-demo icon="social:favorite"></svg-icon-demo>
   <core-meta id="meta" type="iconset"></core-meta>
   <script>
     addEventListener('polymer-ready', function() {
-      var icons = document.querySelector('#meta').byId('navigation').iconNames;
-      icons = icons.map(function(ic){ return 'navigation:' + ic });
+      var icons = document.querySelector('#meta').byId('svg-sample-icons').iconNames;
+      icons = icons.map(function(ic){ return 'svg-sample-icons:' + ic });
       var plates = document.querySelectorAll('template');
       for (var i = 0, p; p = plates[i]; i++) {
         p.model = icons;

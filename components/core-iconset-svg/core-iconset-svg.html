@@ -42,6 +42,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
  *     iconset.applyIcon(iconNode, 'car');
  *
  * @element core-iconset-svg
+ * @extends core-meta
  * @homepage github.io
  */
 -->
@@ -74,16 +75,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (icon) {
           var content = icon.cloneNode(true);
           var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-          svg.setAttribute('viewBox', '0 0 ' + this.iconSize + ' ' + 
+          svg.setAttribute('viewBox', '0 0 ' + this.iconSize + ' ' +
               this.iconSize);
+          // NOTE(dfreedm): work around https://crbug.com/370136
+          svg.style.pointerEvents = 'none';
           svg.appendChild(content);
           return svg;
         }
       },
 
       get iconNames() {
+        if (!this._iconNames) {
+          this._iconNames = this.findIconNames();
+        }
+        return this._iconNames;
+      },
+
+      findIconNames: function() {
         var icons = this.querySelectorAll('[id]').array();
-        return icons.map(function(n){ return n.id });
+        if (icons.length) {
+          return icons.map(function(n){ return n.id });
+        }
       },
 
       /**
@@ -95,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * applied.
        * @param {String|Number} icon The name the icon to apply.
        */
-      applyIcon: function(element, icon) {
+      applyIcon: function(element, icon, scale) {
         var root = element.shadowRoot || element;
         // remove old
         var old = root.querySelector('svg');
@@ -104,8 +116,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         // install new
         var svg = this.cloneIcon(icon);
+        if (!svg) {
+          return;
+        }
+        svg.style.height = svg.style.width = (scale * this.iconSize) + 'px';
+        svg.style.verticalAlign = 'middle';
+        svg.style.display = 'block'
         if (svg) {
-          root.appendChild(svg);
+          root.insertBefore(svg, root.firstElementChild);
         }
       }
     });
